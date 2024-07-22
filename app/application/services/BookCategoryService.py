@@ -28,4 +28,7 @@ class BookCategoryService:
         return self.book_category_repository.update(existing_book_category)
 
     def delete_book_category(self, book_category_id: int) -> None:
+        existing_book_category = self.book_category_repository.get_by_id(book_category_id)
+        if existing_book_category is None:
+            raise ValueError(f"BookCategory with ID {book_category_id} not found")
         self.book_category_repository.delete(book_category_id)

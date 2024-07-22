@@ -31,4 +31,7 @@ class AuthorService:
         return self.author_repository.update(existing_author)
 
     def delete_author(self, author_id: int) -> None:
+        existing_author = self.author_repository.get_by_id(author_id)
+        if existing_author is None:
+            raise ValueError(f"Author with ID {author_id} not found")
         self.author_repository.delete(author_id)

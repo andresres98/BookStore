@@ -36,15 +36,19 @@ def read_book_categories(db: Session = Depends(get_db)):
     return book_categories
 
 @router.put("/book-categories/{book_category_id}", response_model=BookCategorySchema)
-def update_book_category(book_category_id: int, book_category: BookCategorySchema = Body(...), db: Session = Depends(get_db)):
+def update_book_category(book_category_id: int, book_category_schema: BookCategorySchema = Body(...), db: Session = Depends(get_db)):
     book_category_service = BookCategoryService(BookCategoryRepository(db))
     existing_book_category = book_category_service.get_book_category_by_id(book_category_id)
     if existing_book_category is None:
         raise HTTPException(status_code=404, detail="BookCategory not found")
-    book_category.id = book_category_id  # Ensure correct book category ID
-    return book_category_service.update_book_category(book_category)
 
-@router.delete("/book-categories/{book_category_id}", status_code=204)
+    existing_book_category.name = book_category_schema.name
+    existing_book_category.description = book_category_schema.description
+
+    updated_book_category = book_category_service.update_book_category(existing_book_category)
+    return updated_book_category
+
+@router.delete("/book-categories/{book_category_id}", status_code=200)
 def delete_book_category(book_category_id: int, db: Session = Depends(get_db)):
     book_category_service = BookCategoryService(BookCategoryRepository(db))
     book_category_service.delete_book_category(book_category_id)

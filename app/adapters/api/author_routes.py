@@ -37,15 +37,15 @@ def read_authors(db: Session = Depends(get_db)):
     return authors
 
 @router.put("/authors/{author_id}", response_model=AuthorSchema)
-def update_author(author_id: int, author: AuthorSchema = Body(...), db: Session = Depends(get_db)):
+def update_author(author_id: int, author_schema: AuthorSchema = Body(...), db: Session = Depends(get_db)):
     author_service = AuthorService(AuthorRepository(db))
-    existing_author = author_service.get_author_by_id(author_id)
-    if existing_author is None:
-        raise HTTPException(status_code=404, detail="Author not found")
-    author.id = author_id  # Ensure correct author ID
-    return author_service.update_author(author)
+    try:
+        updated_author = author_service.update_author(author_id, author_schema)
+        return updated_author
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
-@router.delete("/authors/{author_id}", status_code=204)
+@router.delete("/authors/{author_id}", status_code=200)
 def delete_author(author_id: int, db: Session = Depends(get_db)):
     author_service = AuthorService(AuthorRepository(db))
     author_service.delete_author(author_id)
