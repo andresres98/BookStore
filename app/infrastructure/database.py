@@ -1,7 +1,7 @@
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine, text
 
-SQLALCHEMY_DATABASE_URL = "mysql+mysqlconnector://root:dawe@localhost:3306/bookstore_api"
+SQLALCHEMY_DATABASE_URL = "mysql+mysqlconnector://root:password123@localhost:3306/bookstore_api"
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
