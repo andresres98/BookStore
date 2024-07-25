@@ -1,9 +1,7 @@
 
 from sqlalchemy import Column, Integer, String, Text
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
-
-Base = declarative_base()
+# Import the shared Base
+from .base import Base
 
 class Author(Base):
     __tablename__ = 'author'
