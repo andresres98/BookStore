@@ -1,6 +1,9 @@
 from pydantic import BaseModel
 from typing import List, Optional
 
+from app.adapters.api.schemas.BookSchema import BookSchema
+from app.adapters.api.schemas.CustomerSchema import CustomerSchema
+
 
 class PurchaseDetailSchema(BaseModel):
     id: Optional[int] = None
@@ -9,12 +12,8 @@ class PurchaseDetailSchema(BaseModel):
     book_id: int
     quantity: int
     unit_price: Optional[float]
-
-    class Config:
-        orm_mode = True
-
-class ListPurchaseDetailsSchema(BaseModel):
-    purchase_details: List[PurchaseDetailSchema]
+    customer: Optional[CustomerSchema] = None
+    book: Optional[BookSchema] = None
 
     class Config:
         orm_mode = True

@@ -16,6 +16,10 @@ class IPurchaseDetailRepository(ABC):
         pass
 
     @abstractmethod
+    def get_all_by_purchase_id(self, purchase_id: int) -> List[Purchase_Detail]:
+        pass
+
+    @abstractmethod
     def update(self, purchase_detail: Purchase_Detail) -> Purchase_Detail:
         pass
 

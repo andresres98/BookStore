@@ -1,4 +1,7 @@
 from typing import Optional, List
+
+from fastapi import HTTPException
+
 from app.domain.interfaces.IEditorialRepository import IEditorialRepository
 from app.domain.models.Editorial import Editorial
 from app.adapters.api.schemas.EditorialSchema import EditorialSchema
@@ -33,5 +36,5 @@ class EditorialService:
     def delete_editorial(self, editorial_id: int) -> None:
         existing_editorial = self.editorial_repository.get_by_id(editorial_id)
         if existing_editorial is None:
-            raise ValueError(f"Editorial with ID {editorial_id} not found")
+            raise HTTPException(status_code=404,detail=f"Editorial with ID {editorial_id} not found")
         self.editorial_repository.delete(editorial_id)

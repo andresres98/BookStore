@@ -48,5 +48,9 @@ def update_customer(customer_id: int, customer_schema: CustomerSchema = Body(...
 @router.delete("/customers/{customer_id}", status_code=200)
 def delete_customer(customer_id: int, db: Session = Depends(get_db)):
     customer_service = CustomerService(CustomerRepository(db))
-    customer_service.delete_customer(customer_id)
+    try:
+        customer_service.delete_customer(customer_id)
+    except HTTPException as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
     return {"message": "Customer deleted successfully"}

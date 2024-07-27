@@ -43,13 +43,20 @@ def update_book_category(book_category_id: int, book_category_schema: BookCatego
         raise HTTPException(status_code=404, detail="BookCategory not found")
 
     existing_book_category.name = book_category_schema.name
-    existing_book_category.description = book_category_schema.description
 
     updated_book_category = book_category_service.update_book_category(existing_book_category)
     return updated_book_category
 
+#@router.delete("/book-categories/{book_category_id}", status_code=200)
+#def delete_book_category(book_category_id: int, db: Session = Depends(get_db)):
+#    from fastapi import HTTPException
+
 @router.delete("/book-categories/{book_category_id}", status_code=200)
 def delete_book_category(book_category_id: int, db: Session = Depends(get_db)):
     book_category_service = BookCategoryService(BookCategoryRepository(db))
-    book_category_service.delete_book_category(book_category_id)
+    try:
+        book_category_service.delete_book_category(book_category_id)
+    except HTTPException as e:
+        raise HTTPException(status_code=e.status_code, detail=e.detail)
+
     return {"message": "BookCategory deleted successfully"}

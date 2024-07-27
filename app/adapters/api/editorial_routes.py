@@ -47,5 +47,9 @@ def update_editorial(editorial_id: int, editorial_schema: EditorialSchema = Body
 @router.delete("/editorials/{editorial_id}", status_code=200)
 def delete_editorial(editorial_id: int, db: Session = Depends(get_db)):
     editorial_service = EditorialService(EditorialRepository(db))
-    editorial_service.delete_editorial(editorial_id)
+    try:
+        editorial_service.delete_editorial(editorial_id)
+    except HTTPException as e:
+        raise HTTPException(status_code=e.status_code, detail=e.detail)
+
     return {"message": "Editorial deleted successfully"}

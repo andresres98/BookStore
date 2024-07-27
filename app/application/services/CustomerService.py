@@ -1,5 +1,8 @@
 # app/application/services/CustomerService.py
 from typing import Optional, List
+
+from fastapi import HTTPException
+
 from app.domain.interfaces.ICustomerRepository import ICustomerRepository
 from app.domain.models.Customer import Customer
 from app.adapters.api.schemas.CustomerSchema import CustomerSchema
@@ -25,7 +28,7 @@ class CustomerService:
     def update_customer(self, customer_id: int, customer_schema: CustomerSchema) -> Customer:
         existing_customer = self.customer_repository.get_by_id(customer_id)
         if existing_customer is None:
-            raise ValueError("Customer not found")
+            raise ValueError(f"Customer with ID {customer_id} not found")
         existing_customer.name = customer_schema.name
         existing_customer.email = customer_schema.email
         existing_customer.phone = customer_schema.phone
@@ -34,5 +37,5 @@ class CustomerService:
     def delete_customer(self, customer_id: int) -> None:
         existing_customer = self.customer_repository.get_by_id(customer_id)
         if existing_customer is None:
-            raise ValueError(f"Customer with ID {customer_id} not found")
+            raise HTTPException(status_code=404, detail= f"Customer with ID {customer_id} not found")
         self.customer_repository.delete(customer_id)

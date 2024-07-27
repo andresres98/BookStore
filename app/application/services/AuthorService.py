@@ -1,4 +1,7 @@
 from typing import Optional, List
+
+from fastapi import HTTPException
+
 from app.domain.interfaces.IAuthorRepository import IAuthorRepository
 from app.domain.models.Author import Author
 from app.adapters.api.schemas.AuthorSchema import AuthorSchema
@@ -33,5 +36,5 @@ class AuthorService:
     def delete_author(self, author_id: int) -> None:
         existing_author = self.author_repository.get_by_id(author_id)
         if existing_author is None:
-            raise ValueError(f"Author with ID {author_id} not found")
+            raise HTTPException(status_code=404, detail=f"Author with ID {author_id} not found")
         self.author_repository.delete(author_id)

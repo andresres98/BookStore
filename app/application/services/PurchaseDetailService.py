@@ -1,4 +1,7 @@
 from typing import Optional, List
+
+from fastapi import HTTPException
+
 from app.domain.interfaces.IPurchaseDetailRepository import IPurchaseDetailRepository
 from app.domain.models.Book import Book
 from app.domain.models.Purchase_Detail import Purchase_Detail
@@ -25,8 +28,12 @@ class PurchaseDetailService:
     def get_all_purchase_details(self) -> List[Purchase_Detail]:
         return self.purchase_detail_repository.get_all()
 
+    def get_all_purchase_details_by_purchase_id(self, purchase_id: int) -> List[Purchase_Detail]:
+        return self.purchase_detail_repository.get_all_by_purchase_id(purchase_id)
+
     def update_purchase_detail(self, purchase_detail_id: int, purchase_detail_schema: PurchaseDetailSchema) -> Purchase_Detail:
         existing_purchase_detail = self.purchase_detail_repository.get_by_id(purchase_detail_id)
+        print(existing_purchase_detail.purchase_id)
         if existing_purchase_detail is None:
             raise ValueError("Purchase Detail not found")
         existing_purchase_detail.purchase_id = purchase_detail_schema.purchase_id
@@ -36,15 +43,15 @@ class PurchaseDetailService:
         existing_purchase_detail.unit_price = purchase_detail_schema.unit_price
         return self.purchase_detail_repository.update(existing_purchase_detail)
 
-    def update_purchase_detail(self, purchase_detail_id: int, purchase_id: int) -> Purchase_Detail:
-        existing_purchase_detail = self.purchase_detail_repository.get_by_id(purchase_detail_id)
-        if existing_purchase_detail is None:
-            raise ValueError("Purchase Detail not found")
-        existing_purchase_detail.purchase_id = purchase_id
-        return self.purchase_detail_repository.update(existing_purchase_detail)
+    #def update_purchase_detail(self, purchase_detail_id: int, purchase_id: int) -> Purchase_Detail:
+    #    existing_purchase_detail = self.purchase_detail_repository.get_by_id(purchase_detail_id)
+    #    if existing_purchase_detail is None:
+    #        raise ValueError("Purchase Detail not found")
+    #    existing_purchase_detail.purchase_id = purchase_id
+    #    return self.purchase_detail_repository.update(existing_purchase_detail)
 
     def delete_purchase_detail(self, purchase_detail_id: int) -> None:
         existing_purchase_detail = self.purchase_detail_repository.get_by_id(purchase_detail_id)
         if existing_purchase_detail is None:
-            raise ValueError(f"Purchase Detail with ID {purchase_detail_id} not found")
+            raise HTTPException(status_code=404, detail=f"Purchase Detail with ID {purchase_detail_id} not found")
         self.purchase_detail_repository.delete(purchase_detail_id)

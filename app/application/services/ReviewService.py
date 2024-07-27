@@ -36,4 +36,5 @@ class ReviewService:
         existing_review = self.review_repository.get_by_id(review_id)
         if existing_review is None:
             raise ValueError(f"Review with ID {review_id} not found")
+        
         self.review_repository.delete(review_id)

@@ -48,5 +48,9 @@ def update_author(author_id: int, author_schema: AuthorSchema = Body(...), db: S
 @router.delete("/authors/{author_id}", status_code=200)
 def delete_author(author_id: int, db: Session = Depends(get_db)):
     author_service = AuthorService(AuthorRepository(db))
-    author_service.delete_author(author_id)
+    try:
+        author_service.delete_author(author_id)
+    except HTTPException as e:
+        raise HTTPException(status_code=e.status_code, detail=e.detail)
+
     return {"message": "Author deleted successfully"}

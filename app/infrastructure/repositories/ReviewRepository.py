@@ -21,14 +21,8 @@ class ReviewRepository(IReviewRepository):
         return self.db_session.query(Review).all()
 
     def update(self, review: Review) -> Review:
-        existing_review = self.db_session.query(Review).filter(Review.id == review.id).first()
-        if existing_review:
-            existing_review.book_id = review.book_id
-            existing_review.customer_id = review.customer_id
-            existing_review.rating = review.rating
-            existing_review.comment = review.comment
-            self.db_session.commit()
-            self.db_session.refresh(existing_review)
+        existing_review = self.db_session.merge(review)
+        self.db_session.commit()
         return existing_review
 
     def delete(self, review_id: int) -> None:

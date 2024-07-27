@@ -1,4 +1,7 @@
 from typing import Optional, List
+
+from fastapi import HTTPException
+
 from app.domain.interfaces.IBookRepository import IBookRepository
 from app.domain.models.Book import Book
 from app.adapters.api.schemas.BookSchema import BookSchema
@@ -41,5 +44,6 @@ class BookService:
     def delete_book(self, book_id: int) -> None:
         existing_book = self.book_repository.get_by_id(book_id)
         if existing_book is None:
-            raise ValueError(f"Book with ID {book_id} not found")
+            raise HTTPException(status_code=404, detail= f"Book with ID {book_id} not found")
+
         self.book_repository.delete(book_id)

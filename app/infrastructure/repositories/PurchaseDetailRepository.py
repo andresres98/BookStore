@@ -19,6 +19,9 @@ class PurchaseDetailRepository(IPurchaseDetailRepository):
     def get_all(self) -> List[Purchase_Detail]:
         return self.db_session.query(Purchase_Detail).all()
 
+    def get_all_by_purchase_id(self, purchase_id: int) -> List[Purchase_Detail]:
+        return self.db_session.query(Purchase_Detail).filter(Purchase_Detail.purchase_id == purchase_id).all()
+
     def update(self, purchase_detail: Purchase_Detail) -> Purchase_Detail:
         existing_purchase_detail = self.db_session.merge(purchase_detail)
         self.db_session.commit()
