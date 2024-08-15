@@ -9,7 +9,16 @@ from app.adapters.api.editorial_routes import router as editorial_router
 from app.adapters.api.book_routes import router as book_router
 from app.adapters.api.purchase_routes import router as purchase_router
 from app.adapters.api.purchase_detail_routes import router as purchase_detail_router
+from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Permitir todos los orígenes
+    allow_credentials=True,
+    allow_methods=["*"],  # Permitir todos los métodos
+    allow_headers=["*"],  # Permitir todos los encabezados
+)
 
 app.include_router(author_router)
 app.include_router(bookcategory_router)
